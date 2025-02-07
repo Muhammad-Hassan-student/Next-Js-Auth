@@ -10,17 +10,18 @@ export const sendMail = async ({email, emailType, userId}:any) => {
           const hashedToken = await bcryptjs.hash(userId.toString(),10);
 
           if(emailType === "VERIFY"){
-            await User.findByIdAndUpdate(userId,{
+            await User.findByIdAndUpdate(userId,
+              {$set:{
               verifyToken: hashedToken,
               verifyTokenExpiry: Date.now() + 3600000
 
-            })
+            }})
           }else if (emailType === "RESET"){
-            await User.findByIdAndUpdate(userId,{
+            await User.findByIdAndUpdate(userId,{$set:{
               forgotPasswordToken: hashedToken,
               forgotPasswordTokenExpiry: Date.now() + 3600000
 
-            })
+            }})
           }
 
        // Looking to send emails in production? Check out our Email API/SMTP product!
@@ -37,9 +38,9 @@ export const sendMail = async ({email, emailType, userId}:any) => {
             to: email, // list of receivers
             subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password", // Subject line
             text: "Hello world text body?", // plain text body
-            html: `<p>Click here <a href="${process.env.DOMAIN}/${emailType === "VERIFY" ? "Verify your email" : "Reset your password"}?token=${hashedToken}">to ${emailType === "VERIFY" ? "Verify your email" : "Reset your password"}</a>
+            html: `<p>Click here <a href="${process.env.DOMAIN}/${emailType === "VERIFY" ? "verifyemail" : "resetpassword"}?token=${hashedToken}">to ${emailType === "VERIFY" ? "Verify your email" : "Reset your password"}</a>
             or copy and paster the link below in your browser.
-            <br> ${process.env.DOMAIN}/${emailType === "VERIFY" ? "Verify your email" : "Reset your password"}?token=${hashedToken}
+            <br> ${process.env.DOMAIN}/${emailType === "VERIFY" ? "verifyemail" : "resetpassword"}?token=${hashedToken}
             </p>`, // html body
           }
 

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,6 +14,12 @@
     --foreground: #ededed;
   }
 }
+.lobster-two-bold {
+  font-family: "Lobster Two", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
 
 body {
   color: var(--foreground);
