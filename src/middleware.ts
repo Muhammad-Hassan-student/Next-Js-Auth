@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     if(isPublicPath && token){
         return NextResponse.redirect(new URL('/', request.url))
         }
-        if(!isPublicPath && !token){
+    if(!isPublicPath && !token){
             return NextResponse.redirect(new URL('/login', request.url))
             }
 
@@ -23,6 +23,6 @@ export const config = {
     '/login',
      '/signup',
      '/profile',
-     'verifyemail',
+     '/verifyemail',
   ],
 }

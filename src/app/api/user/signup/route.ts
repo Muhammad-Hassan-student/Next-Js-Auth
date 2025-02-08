@@ -1,5 +1,5 @@
 
-import {connect} from '@/db/db.config'
+import { connect } from '@/db/db.config'
 import { NextRequest, NextResponse } from 'next/server';
 import User from '@/model/user.model'
 import bcryptjs from 'bcryptjs'
@@ -7,26 +7,26 @@ import { sendMail } from '@/helpers/mailer';
 
 connect();
 
-export async function POST (req: NextRequest){
+export async function POST(req: NextRequest) {
     try {
         const reqBody = req.json();
-        const {username, email,password} = await reqBody;
+        const { username, email, password } = await reqBody;
         console.log(reqBody);
         //validation
-        if(!username || !email || !password || username === "" || email === "" || password === ""){
-            return NextResponse.json({message: "Please required all fields"});
-        } 
+        if (!username || !email || !password || username === "" || email === "" || password === "") {
+            return NextResponse.json({ message: "Please required all fields" });
+        }
 
         //check user is exist or not
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
 
-        if(user){
-            return NextResponse.json({message: "User is already exist", status: 403});
+        if (user) {
+            return NextResponse.json({ message: "User is already exist", status: 403 });
         }
 
         //hashed password
         const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = await bcryptjs.hash(password,salt);
+        const hashedPassword = await bcryptjs.hash(password, salt);
 
         //user add in user model
         const newUser = new User({
@@ -38,7 +38,7 @@ export async function POST (req: NextRequest){
         console.log(savedUser);
 
         //send mail
-        await sendMail({email, emailType: "VERIFY", userId: savedUser._id});
+        await sendMail({ email, emailType: "VERIFY", userId: savedUser._id });
 
         return NextResponse.json({
             message: "User register successfully",
@@ -47,7 +47,7 @@ export async function POST (req: NextRequest){
         })
 
         //
-    } catch (error:any) {
-        return NextResponse.json({error:error.message},{status: 500});
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
